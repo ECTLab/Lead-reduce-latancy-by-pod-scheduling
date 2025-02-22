@@ -1,0 +1,30 @@
+name: reservation
+
+ports:
+  - port: 8087
+    targetPort: 8087
+ 
+container:
+  command: ./reservation
+  image: deathstarbench/hotel-reservation
+  name: hotel-reserv-reservation
+  ports:
+  - containerPort: 8087
+
+configMaps:
+  - name: service-config.json
+    mountPath: config.json
+    value: service-config
+
+affinity:
+  podAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 97
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - frontend
+        topologyKey: "kubernetes.io/hostname"

@@ -1,0 +1,27 @@
+name: mongodb-reservation
+
+replicas: 1
+
+ports:
+  - port: 27022
+    targetPort: 27017
+
+container:
+  image: mongo
+  imageVersion: 5.0
+  name: hotel-reserv-reservation-mongo
+  ports:
+  - containerPort: 27017
+
+affinity:
+  podAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 97
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - memcached-reserve
+        topologyKey: "kubernetes.io/hostname"
